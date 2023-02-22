@@ -1,5 +1,6 @@
 import React from "react";
-import { Route } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
+
 import Users from "./components/layouts/users";
 import Navbar from "./components/navBar";
 import Login from "./components/layouts/login";
@@ -9,11 +10,12 @@ function App() {
     return (
         <div>
             <Navbar />
-            <Route exact path="/" component={Main} />
-            <Route path="/login" component={Login} />
-            <Route path="/users/:userId?">
-                {(props) => <Users {...props} />}
-            </Route>
+            <Switch>
+                <Route path="/users/:userId?" component={Users} />
+                <Route path="/login" component={Login} />
+                <Route path="/" exact component={Main} />
+                <Redirect to="/" />
+            </Switch>
         </div>
     );
 }
