@@ -27,7 +27,7 @@ const GroupList = ({
     );
 };
 GroupList.defaultProps = {
-    valueProperty: "._id",
+    valueProperty: "_id",
     contentProperty: "name"
 };
 
