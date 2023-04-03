@@ -5,6 +5,7 @@ import SelectField from "../common/form/selectField";
 import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import { useHistory } from "react-router-dom";
+import BackHistoryButton from "../common/form/backButton";
 
 const Edit = (userId) => {
     const [user, setUser] = useState();
@@ -67,54 +68,60 @@ const Edit = (userId) => {
 
     if (user) {
         return (
-            <form onSubmit={handleChangeEdit}>
-                <TextField
-                    label="Имя"
-                    name="name"
-                    value={user.name}
-                    onChange={handleChange}
-                />
-                <TextField
-                    label="Почта"
-                    name="email"
-                    value={user.email}
-                    onChange={handleChange}
-                />
-                <SelectField
-                    onChange={handleChange}
-                    options={professions}
-                    value={user.profession._id}
-                    label="Выберите вашу профессию"
-                    name="profession"
-                />
-                <RadioField
-                    options={[
-                        { name: "Male", value: "male" },
-                        { name: "Female", value: "female" },
-                        { name: "Other", value: "other" }
-                    ]}
-                    value={user.sex}
-                    name="sex"
-                    onChange={handleChange}
-                    label="Выберите ваш пол"
-                />
-                <MultiSelectField
-                    options={qualities}
-                    onChange={handleChange}
-                    name="qualities"
-                    label="Выберите ваши качества"
-                    defaultValue={user.qualities.map((quality) => {
-                        return {
-                            label: quality.name,
-                            value: quality._id,
-                            color: quality.color
-                        };
-                    })}
-                />
-                <button type="submit" className="btn btn-primary w-100 mx-auto">
-                    Обновить
-                </button>
-            </form>
+            <>
+                <BackHistoryButton />
+                <form onSubmit={handleChangeEdit}>
+                    <TextField
+                        label="Имя"
+                        name="name"
+                        value={user.name}
+                        onChange={handleChange}
+                    />
+                    <TextField
+                        label="Почта"
+                        name="email"
+                        value={user.email}
+                        onChange={handleChange}
+                    />
+                    <SelectField
+                        onChange={handleChange}
+                        options={professions}
+                        value={user.profession._id}
+                        label="Выберите вашу профессию"
+                        name="profession"
+                    />
+                    <RadioField
+                        options={[
+                            { name: "Male", value: "male" },
+                            { name: "Female", value: "female" },
+                            { name: "Other", value: "other" }
+                        ]}
+                        value={user.sex}
+                        name="sex"
+                        onChange={handleChange}
+                        label="Выберите ваш пол"
+                    />
+                    <MultiSelectField
+                        options={qualities}
+                        onChange={handleChange}
+                        name="qualities"
+                        label="Выберите ваши качества"
+                        defaultValue={user.qualities.map((quality) => {
+                            return {
+                                label: quality.name,
+                                value: quality._id,
+                                color: quality.color
+                            };
+                        })}
+                    />
+                    <button
+                        type="submit"
+                        className="btn btn-primary w-100 mx-auto"
+                    >
+                        Обновить
+                    </button>
+                </form>{" "}
+            </>
         );
     }
 };
