@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
-import api from "../../../api";
 import { displayDate } from "../../../utils/displayDate";
-
+import API from "../../../api";
 const Comment = ({
     content,
     created_at: created,
     _id: id,
-    edited_at: edited,
     userId,
     onRemove
 }) => {
@@ -15,16 +13,17 @@ const Comment = ({
     const [isLoading, setIsLoading] = useState(false);
     useEffect(() => {
         setIsLoading(true);
-        api.users.getById(userId).then((data) => {
+        API.users.getById(userId).then((data) => {
             setUser(data);
             setIsLoading(false);
         });
     }, []);
+
     return (
         <div className="bg-light card-body  mb-3">
             <div className="row">
                 {isLoading ? (
-                    "Loading..."
+                    "Loading ..."
                 ) : (
                     <div className="col">
                         <div className="d-flex flex-start ">
@@ -43,10 +42,9 @@ const Comment = ({
                                 <div className="mb-4">
                                     <div className="d-flex justify-content-between align-items-center">
                                         <p className="mb-1 ">
-                                            {user && user.name}
-                                            {""}
+                                            {user && user.name}{" "}
                                             <span className="small">
-                                                {displayDate(created)}
+                                                - {displayDate(created)}
                                             </span>
                                         </p>
                                         <button
@@ -68,10 +66,11 @@ const Comment = ({
 };
 Comment.propTypes = {
     content: PropTypes.string,
-    created_at: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     edited_at: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-    _id: PropTypes.string,
+    created_at: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     userId: PropTypes.string,
-    onRemove: PropTypes.func
+    onRemove: PropTypes.func,
+    _id: PropTypes.string
 };
+
 export default Comment;
