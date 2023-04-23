@@ -88,9 +88,6 @@ const UsersListPage = () => {
                             selectedItem={selectedProf}
                             items={professions}
                             onItemSelect={handleProfessionSelect}
-                            // valueProperty={Object.keys.professions.map(
-                            //     (profession) => profession._id
-                            // )}
                         />
                         <button
                             className="btn btn-secondary mt-2"

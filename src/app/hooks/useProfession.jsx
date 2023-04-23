@@ -17,6 +17,10 @@ export const ProfessionProvider = ({ children }) => {
         getProfessionsList();
     }, []);
 
+    function errorCatcher(error) {
+        const { message } = error.response.data;
+        setError(message);
+    }
     useEffect(() => {
         if (error !== null) {
             toast.error(error);
@@ -24,10 +28,6 @@ export const ProfessionProvider = ({ children }) => {
         }
     }, [error]);
 
-    function errorCatcher(error) {
-        const { message } = error.response.data;
-        setError(message);
-    }
     function getProfession(id) {
         return professions.find((p) => p._id === id);
     }
@@ -42,7 +42,9 @@ export const ProfessionProvider = ({ children }) => {
     }
 
     return (
-        <ProfessionContext.Provider value={{ professions, isLoading, getProfession }}>
+        <ProfessionContext.Provider
+            value={{ professions, isLoading, getProfession }}
+        >
             {children}
         </ProfessionContext.Provider>
     );
