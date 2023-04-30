@@ -11,10 +11,12 @@ const Users = () => {
     return (
         <>
             <UserProvider>
-                {edit ? (
-                    <Edit userId={userId} />
-                ) : userId ? (
-                    <UserPage userId={userId} />
+                {userId ? (
+                    edit ? (
+                        <Edit />
+                    ) : (
+                        <UserPage userId={userId} />
+                    )
                 ) : (
                     <UsersListPage />
                 )}
