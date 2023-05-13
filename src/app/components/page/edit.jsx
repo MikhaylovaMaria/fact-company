@@ -5,25 +5,26 @@ import RadioField from "../common/form/radioField";
 import MultiSelectField from "../common/form/multiSelectField";
 import { useHistory } from "react-router-dom";
 import BackHistoryButton from "../common/form/backButton";
-import { useProfessions } from "../../hooks/useProfession";
 import { useAuth } from "../../hooks/useAuth";
-import { useQualities } from "../../hooks/useQualities";
 import { validator } from "../../utils/validator";
+import { useSelector } from "react-redux";
+import { getQualities, getQualitiesLoadingStatus } from "../../store/qualities";
+import {
+    getProfessions,
+    getProfessionsLoadingStatus
+} from "../../store/professions";
 
 const Edit = () => {
-    const {
-        professions,
-        getProfession,
-        isLoading: isLoadingProfession
-    } = useProfessions();
     const history = useHistory();
+    const [isLoading, setLoading] = useState(true);
     const [errors, setErrors] = useState({});
+    const [data, setData] = useState();
     const { currentUser, updateUser } = useAuth();
-    const {
-        qualities,
-        getQuality,
-        isLoading: IsLoadingQualities
-    } = useQualities();
+    const qualities = useSelector(getQualities());
+    const IsLoadingQualities = useSelector(getQualitiesLoadingStatus());
+    const professions = useSelector(getProfessions());
+    const isLoadingProfession = useSelector(getProfessionsLoadingStatus());
+
     const professionsList = professions.map((prof) => ({
         label: prof.name,
         value: prof._id
@@ -33,19 +34,43 @@ const Edit = () => {
         value: q._id,
         color: q.color
     }));
-    const [data, setData] = useState({
-        email: currentUser.email,
-        profession: getProfession(currentUser.profession)?._id,
-        sex: currentUser.sex,
-        name: currentUser.name,
-        qualities: currentUser.qualities.map((quality) => {
-            return {
-                label: getQuality(quality).name,
-                value: getQuality(quality)._id,
-                color: getQuality(quality).color
-            };
-        })
-    });
+    function getQualitiesListByIds(qualitiesIds) {
+        const qualitiesArray = [];
+        for (const qualId of qualitiesIds) {
+            for (const quality of qualities) {
+                if (quality._id === qualId) {
+                    qualitiesArray.push(quality);
+                    break;
+                }
+            }
+        }
+        return qualitiesArray;
+    }
+    const transformData = (data) => {
+        const result = getQualitiesListByIds(data).map((qual) => ({
+            label: qual.name,
+            value: qual._id
+        }));
+        return result;
+    };
+    useEffect(() => {
+        if (
+            !isLoadingProfession &&
+            !IsLoadingQualities &&
+            currentUser &&
+            !data
+        ) {
+            setData({
+                ...currentUser,
+                qualities: transformData(currentUser.qualities)
+            });
+        }
+    }, [isLoadingProfession, IsLoadingQualities, currentUser, data]);
+    useEffect(() => {
+        if (data && isLoading) {
+            setLoading(false);
+        }
+    }, [data]);
 
     const handleChange = (target) => {
         setData((prevState) => ({
@@ -53,13 +78,15 @@ const Edit = () => {
             [target.name]: target.value
         }));
     };
-    const handleChangeEdit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        updateUser({
+        const isValid = validate();
+        if (!isValid) return;
+        await updateUser({
             ...data,
             qualities: data.qualities.map((q) => q.value)
         });
-        history.push(`/users/${data._id}`);
+        history.push(`/users/${currentUser._id}`);
     };
     const validatorConfig = {
         email: {
@@ -91,8 +118,8 @@ const Edit = () => {
             <BackHistoryButton />
             <div className="row">
                 <div className="col-md-6 offset-md-3 shadow p-4">
-                    {!isLoadingProfession && !IsLoadingQualities ? (
-                        <form onSubmit={handleChangeEdit}>
+                    {!isLoading ? (
+                        <form onSubmit={handleSubmit}>
                             <TextField
                                 label="Имя"
                                 name="name"
