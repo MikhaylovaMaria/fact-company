@@ -10,8 +10,6 @@ const UserCard = ({ user }) => {
     const handleClick = () => {
         history.push(`/users/${user._id}/edit`);
     };
-    console.log(currentUserId);
-    console.log(user._id);
     return (
         <div className="card mb-3">
             <div className="card-body">
