@@ -1,0 +1,4 @@
+{
+  "port": 8080,
+  "mongoUri": "mongodb+srv://masha:1234@fast-company-server.tki74uz.mongodb.net/app?retryWrites=true&w=majority"
+}
