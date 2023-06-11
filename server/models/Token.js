@@ -1,11 +1,13 @@
 const { Schema, model } = require("mongoose");
 
-const sсhema = new Schema(
+const schema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     refreshToken: { type: String, required: true },
   },
-  { timestamps: true }
+  {
+    timestamps: true,
+  }
 );
 
-module.exports = model("Token", sсhema);
+module.exports = model("Token", schema);
